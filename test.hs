@@ -1,9 +1,23 @@
-main = putStrLn $ show $ getTitles'' songs
+main = putStrLn $ show $ totalTime' songs
 
 getTitles = map (\(title, _, _) -> title)
 
+getTitles' xs = [title | (title, _, _) <- xs]
+
 getTitles'' [] = []
 getTitles'' ((title, _, _):xs) = title : getTitles'' xs
+
+totalTime :: [(a, b, Float)] -> Float
+totalTime xs = sum [time | ( _, _, time) <- xs]
+
+totalTime' = foldl (\acc (a, b, time) -> acc + time::Float) 0
+
+totalTimeErunda = foldl (flip (\(_, _, t) -> (+) (t::Float))) 0
+
+totalTime'' :: [(a, b, Float)] -> Float
+totalTime'' [] = 0
+totalTime'' ((a, b, time):tail) = time + totalTime'' tail
+
 
 
 songs = [
