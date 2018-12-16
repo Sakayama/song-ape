@@ -15,7 +15,7 @@ lastSong (_:xs) = lastSong xs
 lastSong' :: [a] -> a
 lastSong' = last
 
--- takes new title and a list. Returns a new list with a new title1
+-- takes new title and a list. Returns a new list with a new title for the first song
 setFirstTitle :: String -> [Song] -> [Song]
 setFirstTitle title ((_, price, duration):xs) = (title, price, duration) : xs
 
@@ -37,7 +37,6 @@ getTitles'' [] = []
 getTitles'' ((title, _, _):xs) = title : getTitles'' xs
 
 -- returns total time of the playlist
-
 totalTime :: [Song] -> Float
 totalTime xs = sum [time | ( _, _, time) <- xs]
 
@@ -60,7 +59,7 @@ shortestSong [x] = x
 shortestSong (x@(_, _, timeX):xs) = if timeX < timeY then x else y
   where y@( _, _, timeY) = shortestSong xs
 
---   returns the most pricey song
+-- returns the most pricey song
 priceySong :: [Song] -> Song
 priceySong [x] = x
 priceySong (x@(_, priceX, _):xs) = if priceX > priceY then x else y

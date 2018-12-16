@@ -1,16 +1,15 @@
 module Song (
   duration,
-  Song,
-  showSong
+  Song
   ) where
 
 import Data.Time.Clock
+import Data.List
+import Artist
 
+-- id, artistId, title, duration
+type Song = (String, String, String, DiffTime)
+
+-- crutch
 duration :: (Integer, Integer) -> DiffTime
 duration (min, sec) = secondsToDiffTime $ min * 60 + sec
-
--- id, title, duration
-type Song = (String, String, DiffTime)
-
-showSong :: Song -> String
-showSong (_, title, duration) = title ++ " " ++ show duration
