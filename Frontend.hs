@@ -2,27 +2,36 @@
 import qualified Backend
 import Song (Song)
 import Artist (Artist)
+import Album (Album)
 import Order (OrderContract)
+import Data.Maybe
+import Data.List
 
-main = putStrLn repeatingIdsAction
+main = putStrLn placeOrderAction
 
-placeOrderAction = showOrder $ Backend.postOrder ["7", "1a", "a", "z"]
-noIdsAction = showOrder $ Backend.postOrder []
-invalidIdsAction = showOrder $ Backend.postOrder ["z"]
-repeatingIdsAction = showOrder $ Backend.postOrder ["7", "7", "7"]
+placeOrderAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["7", "1a", "a", "z", "1"]
+noIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder []
+invalidIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["z"]
+repeatingIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["7", "7", "7"]
+
+myOrdersAction = intercalate "\n\n" $ map showOrder Backend.getOrders
+
+-- error messages
+placeOrderMessage = "Sorry\nwe were unable to create an order for you"
 
 -- displays order as a string
-showOrder :: Maybe OrderContract -> String
-showOrder Nothing = "Sorreeey"
-showOrder (Just items) =
+showOrder :: OrderContract -> String
+showOrder items =
   title ++ songs ++ total where
   title = "Order: #" ++ "\n"
-  songs = unlines $ map (\(song, mArtist, _) -> showSong mArtist song) items
-  total = "Total price: " ++ (show . sum . map (\(_, _, price) -> price)) items
+  songs = unlines $ map (\(song, mArtist, mAlbum, _) -> showSong mArtist mAlbum song) items
+  total = "Total price: " ++ (show . sum . map (\(_, _, _, price) -> price)) items
 
 -- displays a song as a string
-showSong :: Maybe Artist -> Song -> String
-showSong mArtist (_, _, title, duration) = 
-  artistName ++ title ++ " " ++ show duration
+showSong :: Maybe Artist -> Maybe Album -> Song -> String
+showSong mArtist mAlbum (_, _, _, title, duration) = 
+  artistName ++ title ++ albumTitle ++ " " ++ show duration
   where artistName = case mArtist of Nothing -> ""
-                                     (Just (_, artistName)) -> artistName ++ " - "
+                                     Just (_, artistName) -> artistName ++ " - "
+        albumTitle = case mAlbum of Nothing -> ""
+                                    Just (_, albumTitle) -> " (" ++ albumTitle ++ ")"

@@ -7,8 +7,9 @@ import Data.Time.Clock
 import Data.List
 import Artist
 
--- id, artistId, title, duration
-type Song = (String, String, String, DiffTime)
+-- id, artistId, albumId, title, duration
+type Song = (String, String, String, String, DiffTime)
+-- keeping a [artistId] instead of artistId provides flexibility
 
 -- crutch
 duration :: (Integer, Integer) -> DiffTime
