@@ -1,5 +1,6 @@
 module Db (artists, songs, albums, prices, orders) where
 
+import Data.Map (Map, fromList)
 import Song
 import Artist
 import Order
@@ -8,23 +9,23 @@ import Album
 orders :: [Order]
 orders = [[("1", 1.0)], [("3", 1.0)]]
 
-artists :: [Artist]
-artists = [
+artists :: Map String Artist
+artists = fromList $ (\x -> (fst x, x)) <$> [
     ("artist1", "John Frusciante"),
     ("artist2", "the Beatles"),
     ("artist3", "Vladimir Logachev")
     ]
 
-albums :: [Album]
-albums = [
+albums :: Map String Album
+albums = fromList $ (\x -> (fst x, x)) <$> [
     ("album1", "Empyrean"),
     ("album2", "Niandra LaDes"),
     ("album3", "Curtains"),
     ("album4", "White Album")
     ]
 
-songs :: [Song]
-songs = [
+songs :: Map String Song
+songs = fromList $ (\x@(id, _, _, _, _) -> (id, x)) <$> [
     ("0", "artist1", "album1", "Before The Beginning", duration (9, 09)),
     ("1", "artist1", "album1", "Song To The Siren", duration (3, 33)),
     ("2", "artist1", "album1", "Unreachable", duration (6, 10)),

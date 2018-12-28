@@ -1,10 +1,11 @@
 module Order (Order, OrderContract, createOrder, serializeOrder) where
 
+import Data.List
+import Data.Maybe
+import qualified Data.Map as M
 import Song
 import Artist
 import Album
-import Data.List
-import Data.Maybe
 
 -- id, price
 type Order = [(String, Float)]
@@ -19,10 +20,10 @@ type OrderContract = [(Song, Maybe Artist, Maybe Album, Float)]
 createOrder :: [String] -> [(String, Float)] -> Maybe Order
 createOrder ids prices = 
   if null songsAndPrices then Nothing else Just songsAndPrices
-  where songsAndPrices = catMaybes $ map findPrice $ nub ids
+  where songsAndPrices = catMaybes $ fmap findPrice $ nub ids
         findPrice id = find (\(x, _) -> x == id) prices
 
 -- prepares order to be transmitted to frontend
-serializeOrder :: [Artist] -> [Album] -> [Song] -> Order -> OrderContract
+serializeOrder :: M.Map String Artist -> M.Map String Album -> M.Map String Song -> Order -> OrderContract
 serializeOrder artists albums songs order = 
-  [(song, find (\(x, _) -> x == artistId) artists, find (\(x, _) -> x == albumId) albums, price) | song@(songId, artistId, albumId, _, _) <- songs, (id, price) <- order, songId == id]
+  [(song, M.lookup artistId artists, M.lookup albumId albums, price) | song@(songId, artistId, albumId, _, _) <- M.elems songs, (id, price) <- order, songId == id]
