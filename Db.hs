@@ -1,4 +1,4 @@
-module Db (artists, songs, albums, prices, orders) where
+module Db where
 
 import Data.Map (Map, fromList)
 import Song
@@ -7,7 +7,10 @@ import Order
 import Album
 
 orders :: [Order]
-orders = [[("1", 1.0)], [("3", 1.0)]]
+orders = [
+    (33, [("1", 1.0)]), 
+    (44, [("3", 1.0)])
+    ]
 
 artists :: Map String Artist
 artists = fromList $ (\x -> (fst x, x)) <$> [

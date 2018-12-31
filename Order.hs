@@ -1,4 +1,4 @@
-module Order (Order, OrderContract, createOrder, serializeOrder) where
+module Order where
 
 import Data.List
 import Data.Maybe
@@ -6,24 +6,26 @@ import qualified Data.Map as M
 import Song
 import Artist
 import Album
+import Util
 
--- id, price
-type Order = [(String, Float)]
+-- orderId, [(songId, price)]
+type Order = (Int, [(String, Float)])
 
--- song, artist, price
-type OrderContract = [(Song, Maybe Artist, Maybe Album, Float)] 
+-- orderId, [(song, artist, album, price)]
+type OrderContract = (Int, [(Song, Maybe Artist, Maybe Album, Float)])
 
--- takes a list of ids, a list of songs and a list of prices
+-- takes a list of ids, a list of prices and a list of previous orders
 -- returns an order in case if it's not empty
 -- absence of data for any specific song does not lead to failure, instead it will be skipped
 -- we suppose that if we have price, then we'll definitely have a song
-createOrder :: [String] -> [(String, Float)] -> Maybe Order
-createOrder ids prices = 
-  if null songsAndPrices then Nothing else Just songsAndPrices
-  where songsAndPrices = catMaybes $ fmap findPrice $ nub ids
+createOrder :: [String] -> [(String, Float)] -> [Order] -> Maybe Order
+createOrder ids prices previousOrders = 
+  if null orderContent then Nothing else Just (orderId, orderContent)
+  where orderContent = catMaybes $ findPrice <$> nub ids
         findPrice id = find (\(x, _) -> x == id) prices
+        orderId = (fromMaybe 0 . fmap succ . maximumMaybe . fmap fst) previousOrders
 
 -- prepares order to be transmitted to frontend
 serializeOrder :: M.Map String Artist -> M.Map String Album -> M.Map String Song -> Order -> OrderContract
-serializeOrder artists albums songs order = 
-  [(song, M.lookup artistId artists, M.lookup albumId albums, price) | song@(songId, artistId, albumId, _, _) <- M.elems songs, (id, price) <- order, songId == id]
+serializeOrder artists albums songs (orderId, orderContent) = (orderId, serializedContent) 
+  where serializedContent = [(song, M.lookup artistId artists, M.lookup albumId albums, price) | song@(songId, artistId, albumId, _, _) <- M.elems songs, (id, price) <- orderContent, songId == id]

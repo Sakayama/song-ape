@@ -21,9 +21,9 @@ placeOrderMessage = "Sorry\nwe were unable to create an order for you"
 
 -- displays order as a string
 showOrder :: OrderContract -> String
-showOrder items =
+showOrder (orderId, items) =
   title ++ songs ++ total where
-  title = "Order: #" ++ "\n"
+  title = "Order: #" ++ show orderId ++ "\n"
   songs = unlines $ map (\(song, mArtist, mAlbum, _) -> showSong mArtist mAlbum song) items
   total = "Total price: " ++ (show . sum . map (\(_, _, _, price) -> price)) items
 

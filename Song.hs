@@ -1,7 +1,4 @@
-module Song (
-  duration,
-  Song
-  ) where
+module Song where
 
 import Data.Time.Clock
 import Data.List
