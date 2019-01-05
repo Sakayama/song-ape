@@ -1,30 +1,34 @@
-module Db (artists, songs, albums, prices, orders) where
+module Db where
 
+import Data.Map (Map, fromList)
 import Song
 import Artist
 import Order
 import Album
 
 orders :: [Order]
-orders = [[("1", 1.0)], [("3", 1.0)]]
+orders = [
+    (33, [("1", 1.0)]), 
+    (44, [("3", 1.0)])
+    ]
 
-artists :: [Artist]
-artists = [
+artists :: Map String Artist
+artists = fromList $ (\x -> (fst x, x)) <$> [
     ("artist1", "John Frusciante"),
     ("artist2", "the Beatles"),
     ("artist3", "Vladimir Logachev")
     ]
 
-albums :: [Album]
-albums = [
+albums :: Map String Album
+albums = fromList $ (\x -> (fst x, x)) <$> [
     ("album1", "Empyrean"),
     ("album2", "Niandra LaDes"),
     ("album3", "Curtains"),
     ("album4", "White Album")
     ]
 
-songs :: [Song]
-songs = [
+songs :: Map String Song
+songs = fromList $ (\x@(id, _, _, _, _) -> (id, x)) <$> [
     ("0", "artist1", "album1", "Before The Beginning", duration (9, 09)),
     ("1", "artist1", "album1", "Song To The Siren", duration (3, 33)),
     ("2", "artist1", "album1", "Unreachable", duration (6, 10)),
@@ -91,8 +95,8 @@ songs = [
     ]
 
 -- song id, price
-prices :: [(String, Float)]
-prices = [
+songPrices :: [(String, Float)]
+songPrices = [
     ("0", 1.00),
     ("1", 1.00),
     ("2", 1.00),
@@ -135,3 +139,11 @@ prices = [
     ("1t", 0.99)
     ]
 
+-- album id, price
+albumPrices :: [(String, Float)]
+albumPrices = [
+    ("album1", 7.99),
+    ("album2", 7.99),
+    ("album3", 7.99),
+    ("album4", 8.99)
+    ]
