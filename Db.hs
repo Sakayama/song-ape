@@ -95,8 +95,8 @@ songs = fromList $ (\x@(id, _, _, _, _) -> (id, x)) <$> [
     ]
 
 -- song id, price
-prices :: [(String, Float)]
-prices = [
+songPrices :: [(String, Float)]
+songPrices = [
     ("0", 1.00),
     ("1", 1.00),
     ("2", 1.00),
@@ -139,3 +139,11 @@ prices = [
     ("1t", 0.99)
     ]
 
+-- album id, price
+albumPrices :: [(String, Float)]
+albumPrices = [
+    ("album1", 7.99),
+    ("album2", 7.99),
+    ("album3", 7.99),
+    ("album4", 8.99)
+    ]
