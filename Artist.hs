@@ -1,4 +1,5 @@
-module Artist where
+module Artist (Artist(..)) where
 
--- artistId, name
-type Artist = (String, String)
+data Artist = Artist { artistId :: String, 
+                       artistName :: String
+                       } deriving (Show, Ord, Eq)

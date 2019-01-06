@@ -13,10 +13,10 @@ orders = [
     ]
 
 artists :: Map String Artist
-artists = fromList $ (\x -> (fst x, x)) <$> [
-    ("artist1", "John Frusciante"),
-    ("artist2", "the Beatles"),
-    ("artist3", "Vladimir Logachev")
+artists = fromList $ (\x -> (artistId x, x)) <$> [
+    Artist "artist1" "John Frusciante",
+    Artist "artist2" "the Beatles",
+    Artist "artist3" "Vladimir Logachev"
     ]
 
 albums :: Map String Album

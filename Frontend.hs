@@ -1,13 +1,13 @@
 -- we should import only types, not specific functions
 import qualified Backend
 import Song (Song)
-import Artist (Artist)
+import Artist (Artist(..))
 import Album (Album)
 import Order (OrderContract, OrderedAlbumContract)
 import Data.Maybe
 import Data.List
 
-main = putStrLn purchaseAlbumsAction2
+main = putStrLn purchaseAlbumsAction
 
 placeOrderAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["7", "1a", "a", "z", "1"]
 noIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder []
@@ -36,7 +36,7 @@ showAlbum ((_, albumTitle), mArtist, items, price) =
   title ++ songs ++ total where
   title = "Album: " ++ albumTitle ++ showArtist mArtist ++ "\n"
   showArtist Nothing = ""
-  showArtist (Just (_, x)) = ", " ++ x
+  showArtist (Just (Artist _ x)) = ", " ++ x
   songs = unlines $ (("- " ++) . showSong Nothing Nothing) <$> items
   total = "Album price: " ++ show price
 
@@ -45,6 +45,6 @@ showSong :: Maybe Artist -> Maybe Album -> Song -> String
 showSong mArtist mAlbum (_, _, _, title, duration) = 
   artistName ++ title ++ albumTitle ++ " " ++ show duration
   where artistName = case mArtist of Nothing -> ""
-                                     Just (_, artistName) -> artistName ++ " - "
+                                     Just (Artist _ artistName) -> artistName ++ " - "
         albumTitle = case mAlbum of Nothing -> ""
                                     Just (_, albumTitle) -> " (" ++ albumTitle ++ ")"
