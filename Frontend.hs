@@ -2,7 +2,7 @@
 import qualified Backend
 import Song (Song)
 import Artist (Artist(..))
-import Album (Album)
+import Album (Album(..))
 import Order (OrderContract, OrderedAlbumContract)
 import Data.Maybe
 import Data.List
@@ -32,19 +32,19 @@ showOrder (orderId, items) =
   total = "Total price: " ++ (show . sum . fmap (\(_, _, _, price) -> price)) items
 
 showAlbum :: OrderedAlbumContract -> String
-showAlbum ((_, albumTitle), mArtist, items, price) =
+showAlbum (album, mArtist, items, price) =
   title ++ songs ++ total where
-  title = "Album: " ++ albumTitle ++ showArtist mArtist ++ "\n"
+  title = "Album: " ++ (albumTitle album) ++ " (" ++ (show $ albumYear album) ++ ")" ++ showArtist mArtist ++ "\n"
   showArtist Nothing = ""
-  showArtist (Just (Artist _ x)) = ", " ++ x
+  showArtist (Just x) = ", " ++ (artistName x)
   songs = unlines $ (("- " ++) . showSong Nothing Nothing) <$> items
   total = "Album price: " ++ show price
 
 -- displays a song as a string
 showSong :: Maybe Artist -> Maybe Album -> Song -> String
 showSong mArtist mAlbum (_, _, _, title, duration) = 
-  artistName ++ title ++ albumTitle ++ " " ++ show duration
-  where artistName = case mArtist of Nothing -> ""
-                                     Just (Artist _ artistName) -> artistName ++ " - "
-        albumTitle = case mAlbum of Nothing -> ""
-                                    Just (_, albumTitle) -> " (" ++ albumTitle ++ ")"
+  artist ++ title ++ album ++ " " ++ show duration where 
+    artist = case mArtist of Nothing -> ""
+                             Just x -> (artistName x) ++ " - "
+    album = case mAlbum of Nothing -> ""
+                           Just x -> " (" ++ (albumTitle x) ++ ")"

@@ -1,4 +1,4 @@
-module Album where
+module Album (Album(..)) where
 
--- albumId, title
-type Album = (String, String) 
+data Album = Album { albumId :: String, albumTitle :: String, albumYear :: Int } deriving (Show, Eq, Ord)
+

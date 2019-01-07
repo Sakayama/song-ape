@@ -20,11 +20,11 @@ artists = fromList $ (\x -> (artistId x, x)) <$> [
     ]
 
 albums :: Map String Album
-albums = fromList $ (\x -> (fst x, x)) <$> [
-    ("album1", "Empyrean"),
-    ("album2", "Niandra LaDes"),
-    ("album3", "Curtains"),
-    ("album4", "White Album")
+albums = fromList $ (\x -> (albumId x, x)) <$> [
+    Album "album1" "Empyrean" 2009,
+    Album "album2" "Niandra LaDes" 1994, 
+    Album "album3" "Curtains" 2005,
+    Album "album4" "White Album" 1968
     ]
 
 songs :: Map String Song
