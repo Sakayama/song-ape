@@ -1,22 +1,22 @@
 module Db where
 
 import Data.Map (Map, fromList)
-import Song
-import Artist
-import Order
+import qualified Song as S
+import qualified Artist
+import qualified Order as O
 import Album
 
-orders :: [Order]
+orders :: [O.Order]
 orders = [
-    (33, [("1", 1.0)]), 
-    (44, [("3", 1.0)])
+    O.Order 33 [("1", 1.0)], 
+    O.Order 44 [("3", 1.0)]
     ]
 
-artists :: Map String Artist
-artists = fromList $ (\x -> (artistId x, x)) <$> [
-    Artist "artist1" "John Frusciante",
-    Artist "artist2" "the Beatles",
-    Artist "artist3" "Vladimir Logachev"
+artists :: Map String Artist.Artist
+artists = fromList $ (\x -> (Artist.artistId x, x)) <$> [
+    Artist.Artist "artist1" "John Frusciante",
+    Artist.Artist "artist2" "the Beatles",
+    Artist.Artist "artist3" "Vladimir Logachev"
     ]
 
 albums :: Map String Album
@@ -27,71 +27,71 @@ albums = fromList $ (\x -> (albumId x, x)) <$> [
     Album "album4" "White Album" 1968
     ]
 
-songs :: Map String Song
-songs = fromList $ (\x@(id, _, _, _, _) -> (id, x)) <$> [
-    ("0", "artist1", "album1", "Before The Beginning", duration (9, 09)),
-    ("1", "artist1", "album1", "Song To The Siren", duration (3, 33)),
-    ("2", "artist1", "album1", "Unreachable", duration (6, 10)),
-    ("3", "artist1", "album1", "God", duration (3, 23)),
-    ("4", "artist1", "album1", "Dark / Light", duration (8, 30)),
-    ("5", "artist1", "album1", "Heaven", duration (4, 03)),
-    ("6", "artist1", "album1", "Enough Of Me", duration (4, 15)),
-    ("7", "artist1", "album1", "Central", duration (7, 16)),
-    ("8", "artist1", "album1", "One More Of Me", duration (4, 06)),
-    ("9", "artist1", "album1", "After The Ending", duration (3, 57)),
-    ("a", "artist1", "album2", "As Can Be", duration (2, 57)),
-    ("b", "artist1", "album2", "My Smile Is A Rifle", duration (3, 48)),
-    ("c", "artist1", "album2", "Head (Beach Arab)", duration (2, 05)),
-    ("d", "artist1", "album2", "Big Takeover", duration (3, 18)),
-    ("e", "artist1", "album2", "Curtains", duration (2, 30)),
-    ("f", "artist1", "album2", "Running Away Into You", duration (2, 12)),
-    ("g", "artist1", "album2", "Mascara", duration (3, 40)),
-    ("h", "artist1", "album2", "Been Insane", duration (1, 41)),
-    ("i", "artist1", "album2", "Skin Blues", duration (1, 46)),
-    ("j", "artist1", "album2", "Your Pussy's Glued To A Building On Fire", duration (3, 17)),
-    ("k", "artist1", "album2", "Blood On My Neck From Success", duration (3, 09)),
-    ("l", "artist1", "album2", "Ten To Butter Blood Voodoo", duration (1, 59)),
-    ("m", "artist1", "album3", "The Past Recedes", duration (3, 53)),
-    ("n", "artist1", "album3", "Lever Pulled", duration (2, 22)),
-    ("o", "artist1", "album3", "Anne", duration (3, 35)),
-    ("p", "artist1", "album3", "The Real", duration (3, 07)),
-    ("q", "artist1", "album3", "A Name", duration (2, 03)),
-    ("r", "artist1", "album3", "Control", duration (4, 29)),
-    ("s", "artist1", "album3", "Your Warning", duration (3, 33)),
-    ("t", "artist1", "album3", "Hope", duration (1, 56)),
-    ("u", "artist1", "album3", "Ascension", duration (2, 52)),
-    ("v", "artist1", "album3", "Time Tonight", duration (3, 12)),
-    ("w", "artist1", "album3", "Leap Your Bar", duration (2, 36)),
-    ("10", "artist2", "album4", "Back In The U.S.S.R.", duration (2, 42)),
-    ("11", "artist2", "album4", "Dear Prudence", duration (3, 50)),
-    ("12", "artist2", "album4", "Glass Onion", duration (2, 16)),
-    ("13", "artist2", "album4", "Ob-La-Di, Ob-La-Da", duration (3, 07)),
-    ("14", "artist2", "album4", "Wild Honey Pie", duration (0, 53)),
-    ("15", "artist2", "album4", "The Continuing Story Of Bungalow Bill", duration (3, 11)),
-    ("16", "artist2", "album4", "While My Guitar Gently Weeps", duration (4, 44)),
-    ("17", "artist2", "album4", "Happiness Is A Warm Gun", duration (2, 41)),
-    ("18", "artist2", "album4", "Martha My Dear", duration (2, 26)),
-    ("19", "artist2", "album4", "I'm So Tired", duration (2, 03)),
-    ("1a", "artist2", "album4", "Blackbird", duration (2, 17)),
-    ("1b", "artist2", "album4", "Piggies", duration (2, 03)),
-    ("1c", "artist2", "album4", "Rocky Raccoon", duration (3, 31)),
-    ("1d", "artist2", "album4", "Don't Pass Me By", duration (3, 49)),
-    ("1e", "artist2", "album4", "Why Don't We Do It In The Road?", duration (1, 40)),
-    ("1f", "artist2", "album4", "I Will", duration (1, 44)),
-    ("1g", "artist2", "album4", "Julia", duration (2, 52)),
-    ("1h", "artist2", "album4", "Birthday", duration (2, 41)),
-    ("1i", "artist2", "album4", "Yer Blues", duration (3, 57)),
-    ("1j", "artist2", "album4", "Mother Nature's Son", duration (2, 46)),
-    ("1k", "artist2", "album4", "Everybody's Got Something To Hide Except Me And My Monkey", duration (2, 24)),
-    ("1l", "artist2", "album4", "Sexy Sadie", duration (3, 14)),
-    ("1m", "artist2", "album4", "Helter Skelter", duration (3, 40)),
-    ("1n", "artist2", "album4", "Long, Long, Long", duration (3, 02)),
-    ("1o", "artist2", "album4", "Revolution 1", duration (4, 12)),
-    ("1p", "artist2", "album4", "Honey Pie", duration (2, 40)),
-    ("1q", "artist2", "album4", "Savoy Truffle", duration (2, 57)),
-    ("1r", "artist2", "album4", "Cry Baby Cry", duration (3, 00)),
-    ("1s", "artist2", "album4", "Revolution 9", duration (8, 17)),
-    ("1t", "artist2", "album4", "Good Night", duration (3, 09))
+songs :: Map String S.Song
+songs = fromList $ (\x -> (S.songId x, x)) <$> [
+    S.Song "0" "artist1" "album1" "Before The Beginning" $ S.diffTime (9, 09),
+    S.Song "1" "artist1" "album1" "Song To The Siren" $ S.diffTime (3, 33),
+    S.Song "2" "artist1" "album1" "Unreachable" $ S.diffTime (6, 10),
+    S.Song "3" "artist1" "album1" "God" $ S.diffTime (3, 23),
+    S.Song "4" "artist1" "album1" "Dark / Light" $ S.diffTime (8, 30),
+    S.Song "5" "artist1" "album1" "Heaven" $ S.diffTime (4, 03),
+    S.Song "6" "artist1" "album1" "Enough Of Me" $ S.diffTime (4, 15),
+    S.Song "7" "artist1" "album1" "Central" $ S.diffTime (7, 16),
+    S.Song "8" "artist1" "album1" "One More Of Me" $ S.diffTime (4, 06),
+    S.Song "9" "artist1" "album1" "After The Ending" $ S.diffTime (3, 57),
+    S.Song "a" "artist1" "album2" "As Can Be" $ S.diffTime (2, 57),
+    S.Song "b" "artist1" "album2" "My Smile Is A Rifle" $ S.diffTime (3, 48),
+    S.Song "c" "artist1" "album2" "Head (Beach Arab)" $ S.diffTime (2, 05),
+    S.Song "d" "artist1" "album2" "Big Takeover" $ S.diffTime (3, 18),
+    S.Song "e" "artist1" "album2" "Curtains" $ S.diffTime (2, 30),
+    S.Song "f" "artist1" "album2" "Running Away Into You" $ S.diffTime (2, 12),
+    S.Song "g" "artist1" "album2" "Mascara" $ S.diffTime (3, 40),
+    S.Song "h" "artist1" "album2" "Been Insane" $ S.diffTime (1, 41),
+    S.Song "i" "artist1" "album2" "Skin Blues" $ S.diffTime (1, 46),
+    S.Song "j" "artist1" "album2" "Your Pussy's Glued To A Building On Fire" $ S.diffTime (3, 17),
+    S.Song "k" "artist1" "album2" "Blood On My Neck From Success" $ S.diffTime (3, 09),
+    S.Song "l" "artist1" "album2" "Ten To Butter Blood Voodoo" $ S.diffTime (1, 59),
+    S.Song "m" "artist1" "album3" "The Past Recedes" $ S.diffTime (3, 53),
+    S.Song "n" "artist1" "album3" "Lever Pulled" $ S.diffTime (2, 22),
+    S.Song "o" "artist1" "album3" "Anne" $ S.diffTime (3, 35),
+    S.Song "p" "artist1" "album3" "The Real" $ S.diffTime (3, 07),
+    S.Song "q" "artist1" "album3" "A Name" $ S.diffTime (2, 03),
+    S.Song "r" "artist1" "album3" "Control" $ S.diffTime (4, 29),
+    S.Song "s" "artist1" "album3" "Your Warning" $ S.diffTime (3, 33),
+    S.Song "t" "artist1" "album3" "Hope" $ S.diffTime (1, 56),
+    S.Song "u" "artist1" "album3" "Ascension" $ S.diffTime (2, 52),
+    S.Song "v" "artist1" "album3" "Time Tonight" $ S.diffTime (3, 12),
+    S.Song "w" "artist1" "album3" "Leap Your Bar" $ S.diffTime (2, 36),
+    S.Song "10" "artist2" "album4" "Back In The U.S.S.R." $ S.diffTime (2, 42),
+    S.Song "11" "artist2" "album4" "Dear Prudence" $ S.diffTime (3, 50),
+    S.Song "12" "artist2" "album4" "Glass Onion" $ S.diffTime (2, 16),
+    S.Song "13" "artist2" "album4" "Ob-La-Di, Ob-La-Da" $ S.diffTime (3, 07),
+    S.Song "14" "artist2" "album4" "Wild Honey Pie" $ S.diffTime (0, 53),
+    S.Song "15" "artist2" "album4" "The Continuing Story Of Bungalow Bill" $ S.diffTime (3, 11),
+    S.Song "16" "artist2" "album4" "While My Guitar Gently Weeps" $ S.diffTime (4, 44),
+    S.Song "17" "artist2" "album4" "Happiness Is A Warm Gun" $ S.diffTime (2, 41),
+    S.Song "18" "artist2" "album4" "Martha My Dear" $ S.diffTime (2, 26),
+    S.Song "19" "artist2" "album4" "I'm So Tired" $ S.diffTime (2, 03),
+    S.Song "1a" "artist2" "album4" "Blackbird" $ S.diffTime (2, 17),
+    S.Song "1b" "artist2" "album4" "Piggies" $ S.diffTime (2, 03),
+    S.Song "1c" "artist2" "album4" "Rocky Raccoon" $ S.diffTime (3, 31),
+    S.Song "1d" "artist2" "album4" "Don't Pass Me By" $ S.diffTime (3, 49),
+    S.Song "1e" "artist2" "album4" "Why Don't We Do It In The Road?" $ S.diffTime (1, 40),
+    S.Song "1f" "artist2" "album4" "I Will" $ S.diffTime (1, 44),
+    S.Song "1g" "artist2" "album4" "Julia" $ S.diffTime (2, 52),
+    S.Song "1h" "artist2" "album4" "Birthday" $ S.diffTime (2, 41),
+    S.Song "1i" "artist2" "album4" "Yer Blues" $ S.diffTime (3, 57),
+    S.Song "1j" "artist2" "album4" "Mother Nature's Son" $ S.diffTime (2, 46),
+    S.Song "1k" "artist2" "album4" "Everybody's Got Something To Hide Except Me And My Monkey" $ S.diffTime (2, 24),
+    S.Song "1l" "artist2" "album4" "Sexy Sadie" $ S.diffTime (3, 14),
+    S.Song "1m" "artist2" "album4" "Helter Skelter" $ S.diffTime (3, 40),
+    S.Song "1n" "artist2" "album4" "Long, Long, Long" $ S.diffTime (3, 02),
+    S.Song "1o" "artist2" "album4" "Revolution 1" $ S.diffTime (4, 12),
+    S.Song "1p" "artist2" "album4" "Honey Pie" $ S.diffTime (2, 40),
+    S.Song "1q" "artist2" "album4" "Savoy Truffle" $ S.diffTime (2, 57),
+    S.Song "1r" "artist2" "album4" "Cry Baby Cry" $ S.diffTime (3, 00),
+    S.Song "1s" "artist2" "album4" "Revolution 9" $ S.diffTime (8, 17),
+    S.Song "1t" "artist2" "album4" "Good Night" $ S.diffTime (3, 09)
     ]
 
 -- song id, price

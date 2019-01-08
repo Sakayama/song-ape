@@ -1,6 +1,6 @@
 -- we should import only types, not specific functions
 import qualified Backend
-import Song (Song)
+import qualified Song as S
 import Artist (Artist(..))
 import Album (Album(..))
 import Order (OrderContract, OrderedAlbumContract)
@@ -41,9 +41,9 @@ showAlbum (album, mArtist, items, price) =
   total = "Album price: " ++ show price
 
 -- displays a song as a string
-showSong :: Maybe Artist -> Maybe Album -> Song -> String
-showSong mArtist mAlbum (_, _, _, title, duration) = 
-  artist ++ title ++ album ++ " " ++ show duration where 
+showSong :: Maybe Artist -> Maybe Album -> S.Song -> String
+showSong mArtist mAlbum song = 
+  artist ++ (S.title song) ++ album ++ " " ++ show (S.duration song) where 
     artist = case mArtist of Nothing -> ""
                              Just x -> (artistName x) ++ " - "
     album = case mAlbum of Nothing -> ""

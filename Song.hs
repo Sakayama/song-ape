@@ -1,13 +1,17 @@
-module Song where
+module Song (Song(..), diffTime) where
 
 import Data.Time.Clock
 import Data.List
 import Artist
 
--- id, artistId, albumId, title, duration
-type Song = (String, String, String, String, DiffTime)
--- keeping a [artistId] instead of artistId provides flexibility
+-- TODO: keeping a [artistId] instead of artistId provides flexibility
+data Song = Song { songId :: String
+                 , artistId :: String
+                 , albumId :: String
+                 , title :: String
+                 , duration :: DiffTime
+                 }
 
 -- crutch
-duration :: (Integer, Integer) -> DiffTime
-duration (min, sec) = secondsToDiffTime $ min * 60 + sec
+diffTime :: (Integer, Integer) -> DiffTime
+diffTime (min, sec) = secondsToDiffTime $ min * 60 + sec
