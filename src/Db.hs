@@ -4,7 +4,7 @@ import Data.Map (Map, fromList)
 import qualified Song as S
 import qualified Artist
 import qualified Order as O
-import Album
+import qualified Album
 
 orders :: [O.Order]
 orders = [
@@ -19,12 +19,12 @@ artists = fromList $ (\x -> (Artist.artistId x, x)) <$> [
     Artist.Artist "artist3" "Vladimir Logachev"
     ]
 
-albums :: Map String Album
-albums = fromList $ (\x -> (albumId x, x)) <$> [
-    Album "album1" "Empyrean" 2009,
-    Album "album2" "Niandra LaDes" 1994, 
-    Album "album3" "Curtains" 2005,
-    Album "album4" "White Album" 1968
+albums :: Map String Album.Album
+albums = fromList $ (\x -> (Album.albumId x, x)) <$> [
+    Album.Album "album1" "Empyrean" 2009,
+    Album.Album "album2" "Niandra LaDes" 1994, 
+    Album.Album "album3" "Curtains" 2005,
+    Album.Album "album4" "White Album" 1968
     ]
 
 songs :: Map String S.Song

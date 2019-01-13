@@ -1,23 +1,31 @@
-module Order (Order(..), OrderContract, OrderedAlbum, OrderedAlbumContract, createOrder, orderOnlyAlbums, serializeOrder, serializeAlbum) where
+module Order (Order(..), OrderDatagram, AlbumDatagram, createOrder, orderOnlyAlbums, serializeOrder, serializeAlbum) where
 
 import Data.List
 import Data.Maybe
 import qualified Data.Map as M
 import qualified Song as S
-import Artist
-import Album
+import qualified Artist
+import qualified Album
 import Util
 
--- content :: [(songId, price)]
-data Order = Order { orderId :: Int, content :: [(String, Float)] }
+-- (songId, price)
+type SongItem = (String, Float)
 
--- orderId, [(song, artist, album, price)]
-type OrderContract = (Int, [(S.Song, Maybe Artist, Maybe Album, Float)])
+-- (song, artist, album, price)
+type SongDatagram = (S.Song, Maybe Artist.Artist, Maybe Album.Album, Float)
 
--- albumId, albumPrice
-type OrderedAlbum = (String, Float)
+data AlbumItem = AlbumItem { albumId :: String, albumPrice :: Float }
 
-type OrderedAlbumContract = (Album, Maybe Artist, [S.Song], Float)
+type AlbumDatagram = (Album.Album, Maybe Artist.Artist, [S.Song], Float)
+
+type Item = SongItem -- or AlbumItem
+
+type ItemDatagram = SongDatagram -- or AlbumDatagram
+
+data Order = Order { orderId :: Int, content :: [Item] }
+
+-- TODO: find a proper name for Contract
+type OrderDatagram = (Int, [ItemDatagram])
 
 -- takes a list of prices, a list of previous orders and a list of ids
 -- returns an order in case if it's not empty
@@ -30,14 +38,14 @@ createOrder songPrices previousOrders ids =
         findPrice id = find (\(x, _) -> x == id) songPrices
         nextId = (fromMaybe 0 . fmap succ . safeMaximum . fmap orderId) previousOrders
 
-orderOnlyAlbums :: [(String, Float)] -> [String] -> Maybe [OrderedAlbum]
+orderOnlyAlbums :: [(String, Float)] -> [String] -> Maybe [AlbumItem]
 orderOnlyAlbums albumPrices ids = 
-  if null content then Nothing else Just content
-  where content = catMaybes $ findPrice <$> nub ids
-        findPrice id = find (\(x, _) -> x == id) albumPrices
+  if null items then Nothing else Just items -- refactor if + catMaybes to a specialized function
+  where items = catMaybes $ findPrice <$> nub ids
+        findPrice id = (\(x, y) -> AlbumItem x y) <$> find (\(x, _) -> x == id) albumPrices
 
 -- prepares order to be transmitted to frontend
-serializeOrder :: M.Map String Artist -> M.Map String Album -> M.Map String S.Song -> Order -> OrderContract
+serializeOrder :: M.Map String Artist.Artist -> M.Map String Album.Album -> M.Map String S.Song -> Order -> OrderDatagram
 serializeOrder artists albums songs (Order orderId orderContent) = (orderId, serializedContent) where
   serializedContent = [
     (song, M.lookup (S.artistId song) artists, M.lookup (S.albumId song) albums, price) |
@@ -46,8 +54,8 @@ serializeOrder artists albums songs (Order orderId orderContent) = (orderId, ser
     S.songId song == id
     ]
 
-serializeAlbum :: M.Map String Artist -> M.Map String Album -> M.Map String S.Song -> OrderedAlbum -> OrderedAlbumContract
-serializeAlbum artists albums allSongs (albumId, albumPrice) =
+serializeAlbum :: M.Map String Artist.Artist -> M.Map String Album.Album -> M.Map String S.Song -> AlbumItem -> AlbumDatagram
+serializeAlbum artists albums allSongs (AlbumItem albumId albumPrice) =
   (album, maybeArtist, songs, albumPrice)
   where album = albums M.! albumId
         songs = filter (\x -> S.albumId x == albumId) (M.elems allSongs)

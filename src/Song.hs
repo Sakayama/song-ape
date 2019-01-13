@@ -2,7 +2,6 @@ module Song (Song(..), diffTime) where
 
 import Data.Time.Clock
 import Data.List
-import Artist
 
 -- TODO: keeping a [artistId] instead of artistId provides flexibility
 data Song = Song { songId :: String
