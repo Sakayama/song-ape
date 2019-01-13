@@ -1,4 +1,4 @@
-module Order (Order(..), OrderDatagram, AlbumDatagram, createOrder, orderOnlyAlbums, serializeOrder, serializeAlbum) where
+module Order (Order(..), SongId(..), AlbumId(..), OrderDatagram, AlbumDatagram, createOrder, orderOnlyAlbums, serializeOrder, serializeAlbum) where
 
 import Data.List
 import Data.Maybe
@@ -7,6 +7,9 @@ import qualified Song as S
 import qualified Artist
 import qualified Album
 import Util
+
+data SongId = SongId String deriving (Eq)
+data AlbumId = AlbumId String deriving (Eq)
 
 -- (songId, price)
 type SongItem = (String, Float)
@@ -31,18 +34,18 @@ type OrderDatagram = (Int, [ItemDatagram])
 -- returns an order in case if it's not empty
 -- absence of data for any specific song does not lead to failure, instead it will be skipped
 -- we suppose that if we have price, then we'll definitely have a song
-createOrder :: [(String, Float)] -> [Order] -> [String] -> Maybe Order
+createOrder :: [(String, Float)] -> [Order] -> [SongId] -> Maybe Order
 createOrder songPrices previousOrders ids = 
   if null orderContent then Nothing else Just (Order nextId orderContent)
   where orderContent = catMaybes $ findPrice <$> nub ids
-        findPrice id = find (\(x, _) -> x == id) songPrices
+        findPrice (SongId id) = find (\(x, _) -> x == id) songPrices
         nextId = (fromMaybe 0 . fmap succ . safeMaximum . fmap orderId) previousOrders
 
-orderOnlyAlbums :: [(String, Float)] -> [String] -> Maybe [AlbumItem]
+orderOnlyAlbums :: [(String, Float)] -> [AlbumId] -> Maybe [AlbumItem]
 orderOnlyAlbums albumPrices ids = 
   if null items then Nothing else Just items -- refactor if + catMaybes to a specialized function
   where items = catMaybes $ findPrice <$> nub ids
-        findPrice id = (\(x, y) -> AlbumItem x y) <$> find (\(x, _) -> x == id) albumPrices
+        findPrice (AlbumId id) = (\(x, y) -> AlbumItem x y) <$> find (\(x, _) -> x == id) albumPrices
 
 -- prepares order to be transmitted to frontend
 serializeOrder :: M.Map String Artist.Artist -> M.Map String Album.Album -> M.Map String S.Song -> Order -> OrderDatagram

@@ -5,20 +5,20 @@ import qualified Backend
 import qualified Song as S
 import qualified Artist (Artist(..))
 import qualified Album (Album(..))
-import Order (OrderDatagram, AlbumDatagram)
+import Order (OrderDatagram, AlbumDatagram, SongId(..), AlbumId(..))
 import Data.Maybe
 import Data.List
 
 mainAction :: String
 mainAction = purchaseAlbumsAction
 
-placeOrderAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["7", "1a", "a", "z", "1"]
+placeOrderAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "7", SongId "1a", SongId "a", SongId "z", SongId "1"]
 noIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder []
-invalidIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["z"]
-repeatingIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder ["7", "7", "7"]
+invalidIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "z"]
+repeatingIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "7", SongId "7", SongId "7"]
 
-purchaseAlbumsAction = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums ["album1", "album2", "album3", "album4"]
-purchaseAlbumsAction2 = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums ["album5"]
+purchaseAlbumsAction = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums [AlbumId "album1", AlbumId "album2", AlbumId "album3", AlbumId "album4"]
+purchaseAlbumsAction2 = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums [AlbumId "album5"]
 purchaseAlbumsAction3 = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums []
 
 myOrdersAction = intercalate "\n\n" $ fmap showOrder Backend.getOrders
