@@ -4,11 +4,11 @@ module Backend where
 import Order
 import qualified Db
 
-postOrder :: [SongId] -> Maybe OrderDatagram
-postOrder ids = fmap (serializeOrder Db.artists Db.albums Db.songs) $ createOrder Db.songPrices Db.orders ids
+postOrder :: [SongId] -> Maybe SongOrderDatagram
+postOrder ids = (serializeSongOrder Db.artists Db.albums Db.songs) <$> createSongOrder Db.songPrices Db.albumPrices Db.orders ids
 
-purchaseAlbums :: [AlbumId] -> Maybe [AlbumDatagram]
-purchaseAlbums ids = (serializeAlbum Db.artists Db.albums Db.songs <$>) <$> (orderOnlyAlbums Db.albumPrices ids)
+purchaseAlbums :: [AlbumId] -> Maybe AlbumOrderDatagram
+purchaseAlbums ids = (serializeAlbumOrder Db.artists Db.albums Db.songs) <$> createAlbumOrder Db.songPrices Db.albumPrices Db.orders ids
 
-getOrders :: [OrderDatagram]
-getOrders = fmap (serializeOrder Db.artists Db.albums Db.songs) Db.orders
+getOrders :: [SongOrderDatagram]
+getOrders = fmap (serializeSongOrder Db.artists Db.albums Db.songs) Db.orders

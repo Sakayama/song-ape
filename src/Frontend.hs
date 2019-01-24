@@ -5,37 +5,44 @@ import qualified Backend
 import qualified Song as S
 import qualified Artist (Artist(..))
 import qualified Album (Album(..))
-import Order (OrderDatagram, AlbumDatagram, SongId(..), AlbumId(..))
+import Order (SongOrderDatagram(..), AlbumDatagram(..), SongId(..), AlbumId(..), SongDatagram(..), AlbumOrderDatagram(..))
 import Data.Maybe
 import Data.List
 
 mainAction :: String
-mainAction = purchaseAlbumsAction
+mainAction = placeOrderAction
 
-placeOrderAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "7", SongId "1a", SongId "a", SongId "z", SongId "1"]
-noIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder []
-invalidIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "z"]
-repeatingIdsAction = fromMaybe placeOrderMessage $ fmap showOrder $ Backend.postOrder [SongId "7", SongId "7", SongId "7"]
+placeOrderAction = fromMaybe placeOrderMessage $ showSongOrder <$> Backend.postOrder [SongId "7", SongId "1a", SongId "a", SongId "z", SongId "1"]
+noIdsAction = fromMaybe placeOrderMessage $ showSongOrder <$> Backend.postOrder []
+invalidIdsAction = fromMaybe placeOrderMessage $ showSongOrder <$> Backend.postOrder [SongId "z"]
+repeatingIdsAction = fromMaybe placeOrderMessage $ showSongOrder <$> Backend.postOrder [SongId "7", SongId "7", SongId "7"]
 
-purchaseAlbumsAction = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums [AlbumId "album1", AlbumId "album2", AlbumId "album3", AlbumId "album4"]
-purchaseAlbumsAction2 = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums [AlbumId "album5"]
-purchaseAlbumsAction3 = fromMaybe placeOrderMessage $ (intercalate "\n\n" . fmap showAlbum) <$> Backend.purchaseAlbums []
+purchaseAlbumsAction = fromMaybe placeOrderMessage $ showAlbumOrder <$> Backend.purchaseAlbums [AlbumId "album1", AlbumId "album2", AlbumId "album3", AlbumId "album4"]
+purchaseAlbumsAction2 = fromMaybe placeOrderMessage $ showAlbumOrder <$> Backend.purchaseAlbums [AlbumId "album5"]
+purchaseAlbumsAction3 = fromMaybe placeOrderMessage $ showAlbumOrder <$> Backend.purchaseAlbums []
 
-myOrdersAction = intercalate "\n\n" $ fmap showOrder Backend.getOrders
+myOrdersAction = intercalate "\n\n" $ fmap showSongOrder Backend.getOrders
 
 -- error messages
 placeOrderMessage = "Sorry\nwe were unable to create an order for you"
 
 -- displays order as a string
-showOrder :: OrderDatagram -> String
-showOrder (orderId, items) =
+showSongOrder :: SongOrderDatagram -> String
+showSongOrder (SongOrderDatagram orderId items) =
   title ++ songs ++ total where
   title = "Order: #" ++ show orderId ++ "\n"
-  songs = unlines $ (\(song, mArtist, mAlbum, _) -> showSong mArtist mAlbum song) <$> items
-  total = "Total price: " ++ (show . sum . fmap (\(_, _, _, price) -> price)) items
+  songs = unlines $ (\(SongDatagram song mArtist mAlbum _) -> showSong mArtist mAlbum song) <$> items
+  total = "Total price: " ++ (show . sum . fmap (\(SongDatagram _ _ _ price) -> price)) items
+
+showAlbumOrder :: AlbumOrderDatagram -> String
+showAlbumOrder (AlbumOrderDatagram orderId items) =
+  title ++ albums ++ total where
+  title = "Order: #" ++ show orderId ++ "\n"
+  albums = intercalate "\n\n" $ showAlbum <$> items
+  total = "\nTotal price: " ++ (show . sum . fmap (\(AlbumDatagram _ _ _ price) -> price)) items
 
 showAlbum :: AlbumDatagram -> String
-showAlbum (album, mArtist, items, price) =
+showAlbum (AlbumDatagram album mArtist items price) =
   title ++ songs ++ total where
   title = "Album: " ++ (Album.albumTitle album) ++ " (" ++ (show $ Album.albumYear album) ++ ")" ++ showArtist mArtist ++ "\n"
   showArtist Nothing = ""
