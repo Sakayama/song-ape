@@ -5,7 +5,7 @@ import qualified Backend
 import qualified Song as S
 import qualified Artist (Artist(..))
 import qualified Album (Album(..))
-import Order (SongOrderDatagram(..), AlbumDatagram(..), SongId(..), AlbumId(..), SongDatagram(..), AlbumOrderDatagram(..))
+import Order (OrderDatagram(..), ItemDatagram(..), ItemId(..))
 import Data.Maybe
 import Data.List
 
@@ -27,21 +27,21 @@ myOrdersAction = intercalate "\n\n" $ fmap showSongOrder Backend.getOrders
 placeOrderMessage = "Sorry\nwe were unable to create an order for you"
 
 -- displays order as a string
-showSongOrder :: SongOrderDatagram -> String
-showSongOrder (SongOrderDatagram orderId items) =
+showSongOrder :: OrderDatagram -> String
+showSongOrder (OrderDatagram orderId items) =
   title ++ songs ++ total where
   title = "Order: #" ++ show orderId ++ "\n"
   songs = unlines $ (\(SongDatagram song mArtist mAlbum _) -> showSong mArtist mAlbum song) <$> items
   total = "Total price: " ++ (show . sum . fmap (\(SongDatagram _ _ _ price) -> price)) items
 
-showAlbumOrder :: AlbumOrderDatagram -> String
-showAlbumOrder (AlbumOrderDatagram orderId items) =
+showAlbumOrder :: OrderDatagram -> String
+showAlbumOrder (OrderDatagram orderId items) =
   title ++ albums ++ total where
   title = "Order: #" ++ show orderId ++ "\n"
   albums = intercalate "\n\n" $ showAlbum <$> items
   total = "\nTotal price: " ++ (show . sum . fmap (\(AlbumDatagram _ _ _ price) -> price)) items
 
-showAlbum :: AlbumDatagram -> String
+showAlbum :: ItemDatagram -> String
 showAlbum (AlbumDatagram album mArtist items price) =
   title ++ songs ++ total where
   title = "Album: " ++ (Album.albumTitle album) ++ " (" ++ (show $ Album.albumYear album) ++ ")" ++ showArtist mArtist ++ "\n"

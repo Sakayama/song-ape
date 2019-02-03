@@ -6,10 +6,10 @@ import qualified Artist
 import qualified Order as O
 import qualified Album
 
-orders :: [O.SongOrder]
+orders :: [O.Order]
 orders = [
-    O.SongOrder 33 [O.SongItem "1" 1.0], 
-    O.SongOrder 44 [O.SongItem "3" 1.0]
+    O.Order 33 [O.SongItem "1" 1.0], 
+    O.Order 44 [O.SongItem "3" 1.0]
     ]
 
 artists :: Map String Artist.Artist
