@@ -1,3 +1,9 @@
+# haskell
 .stack-work/
 song-ape.cabal
 *~
+
+# mac
+.DS_Store
+
+# win
