@@ -1,4 +1,5 @@
 /* Common */
+
 body {
   padding: 20px;
   font-family: "Roboto", sans-serif;
@@ -9,6 +10,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  word-break: break-word;
 }
 
 h1 {
@@ -34,9 +36,17 @@ li {
   max-width: 1000px;
 }
 
-/* Header */
+/* Secondary header */
 
-.header {
+.secondary-header {
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+/* Page header */
+
+.page-header {
   padding-bottom: 28px;
 }
 
@@ -119,7 +129,7 @@ li {
   flex-direction: row;
 }
 
-.letter-group + .letter-group {
+.letter-group+.letter-group {
   margin-top: 23px;
 }
 
@@ -138,7 +148,7 @@ li {
   flex-direction: column;
 }
 
-.letter-list li + li {
+.letter-list li+li {
   margin-top: 15px;
 }
 
@@ -187,6 +197,16 @@ li {
   margin-left: 45px;
 }
 
+@media all and (max-width: 480px) {
+  .album-info {
+    flex-wrap: wrap;
+  }
+  .album-details {
+    margin-left: 0;
+    margin-top: 24px;
+  }
+}
+
 .album-title {
   text-transform: uppercase;
   margin: 0;
@@ -197,11 +217,73 @@ li {
 .album-description {
   font-weight: 300;
   font-size: 12px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   margin-top: 20px;
 }
 
-.album-price {
+/* add-to-cart-button */
+
+.add-to-cart-button {
+  display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.price-text {
   font-family: "Roboto Mono", monospace;
   font-size: 10px;
+}
+
+.plus-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 5px;
+}
+
+/* song-with-number */
+
+.song-with-number {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 300px;
+}
+
+.song-with-number>*+* {
+  margin-left: 5px;
+}
+
+.song-with-number__track-number {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 15px;
+  text-align: right;
+  color: #C4C4C4;
+}
+
+.song-with-number__play-icon {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.song-with-number__title {}
+
+.song-with-number__duration {
+  margin-left: auto;
+  padding-left: 3px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  color: #C4C4C4;
+}
+
+.song-with-number .add-to-cart-button {
+  width: 62px;
+  justify-content: flex-end;
 }
