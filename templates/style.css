@@ -1,7 +1,8 @@
 /* Common */
 
 body {
-  padding: 20px;
+  padding: 0;
+  margin: 0;
   font-family: "Roboto", sans-serif;
   color: #000000;
   font-style: normal;
@@ -28,12 +29,21 @@ li {
   list-style: none;
 }
 
-/* Page */
+/* Page-block */
 
-.page {
+.block__wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.block__content {
   display: flex;
   flex-direction: column;
-  max-width: 1000px;
+  width: 800px;
+  flex-shrink: 1;
+  margin: 15px 20px;
 }
 
 /* Secondary header */
@@ -42,6 +52,11 @@ li {
   font-weight: 400;
   font-size: 14px;
   text-transform: uppercase;
+}
+
+.secondary-link {
+  color: #828282;
+  text-decoration: underline;
 }
 
 /* Page header */
@@ -175,46 +190,46 @@ li {
   content: none;
 }
 
-/* album info */
+/* album info, artist info */
 
-.album-info {
+.album-info, .artist-info {
   display: flex;
   flex-direction: row;
   margin-bottom: 38px;
 }
 
-.album-cover-container {
+.album-cover-container, .artist-info__pic-container {
   flex-shrink: 0;
   width: 195px;
 }
 
-.album-cover {
+.album-cover, .artist-info__artist-pic {
   max-width: 195px;
   max-height: 250px;
 }
 
-.album-details {
+.album-details, .artist-info__artist-details {
   margin-left: 45px;
 }
 
 @media all and (max-width: 480px) {
-  .album-info {
+  .album-info, .artist-info {
     flex-wrap: wrap;
   }
-  .album-details {
+  .album-details, .artist-info__artist-details {
     margin-left: 0;
     margin-top: 24px;
   }
 }
 
-.album-title {
+.album-title, .artist-info__artist-name {
   text-transform: uppercase;
   margin: 0;
   font-weight: 500;
   font-size: 16px;
 }
 
-.album-description {
+.album-description, .artist-info__artist-bio {
   font-weight: 300;
   font-size: 12px;
   margin-bottom: 10px;
@@ -223,7 +238,9 @@ li {
 
 /* add-to-cart-button */
 
-.add-to-cart-button {
+/* remove-from-cart-button */
+
+.add-to-cart-button, .remove-button {
   display: flex;
   flex-shrink: 0;
   flex-grow: 0;
@@ -233,12 +250,12 @@ li {
   padding-bottom: 5px;
 }
 
-.price-text {
+.add-to-cart-button__price, .remove-button__price {
   font-family: "Roboto Mono", monospace;
-  font-size: 10px;
+  font-weight: 600;
 }
 
-.plus-icon {
+.plus-icon, .delete-icon {
   width: 18px;
   height: 18px;
   margin-left: 5px;
@@ -249,7 +266,7 @@ li {
 .song-with-number {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
   justify-content: flex-end;
   width: 300px;
 }
@@ -271,6 +288,7 @@ li {
   flex-grow: 0;
   width: 12px;
   height: 12px;
+  align-self: center;
 }
 
 .song-with-number__title {}
@@ -283,7 +301,105 @@ li {
   color: #C4C4C4;
 }
 
-.song-with-number .add-to-cart-button {
+.song-with-number .add-to-cart-button, 
+.song-with-number .remove-button {
   width: 62px;
   justify-content: flex-end;
+}
+
+/* Album-item */
+
+.album-item {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  width: 150px;
+}
+
+.album-item__img {
+  width: 150px;
+  height: 150px;
+  background-color: #C4C4C4;
+  margin-bottom: 14px;
+}
+
+.album-item__title {}
+
+.album-item__year {}
+
+/* Albums */
+
+.albums__list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Order */
+
+.order-expanded {
+  background-color: #FBFBFB;
+}
+
+.order-collapsed:hover {
+  background-color: #FFF4CF
+}
+
+.order-header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 6px 0;
+}
+
+.order-header .secondary-link {
+  margin-left: 30px;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+.order-header__title {
+  width: 100px;
+  font-size: 14px;
+}
+
+.order-header__title__id {
+  font-weight: 500;
+}
+
+.order-header__date {
+  font-size: 11px;
+  width: 70px;
+  text-align: right;
+}
+
+.order-header__total {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 600;
+  width: 80px;
+  text-align: right;
+}
+
+/* Order-confirmation */
+
+.order-warnings {
+  background-color: #FFF4CF
+}
+
+.order-warnings__warning::before {
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  content: "!";
+}
+
+.removable-album {
+  display: flex;
+  flex-direction: row;
+  margin-right: 30px;
+}
+
+.removable-album .album-item {
+  margin-right: 0
 }
