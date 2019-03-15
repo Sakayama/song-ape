@@ -301,8 +301,7 @@ li {
   color: #C4C4C4;
 }
 
-.song-with-number .add-to-cart-button, 
-.song-with-number .remove-button {
+.song-with-number .add-to-cart-button, .song-with-number .remove-button {
   width: 62px;
   justify-content: flex-end;
 }
@@ -403,3 +402,28 @@ li {
 .removable-album .album-item {
   margin-right: 0
 }
+
+/* order summary */
+
+.order-summary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 47px;
+}
+
+.order-summary__total {
+  width: 250px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.order-summary__payment {}
+
+.order-summary__payment-title {
+  font-size: 15px;
+}
+
+.order-summary__payment-icons {}
+
+.payment-method-icon {}
