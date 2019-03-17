@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:300,300i,400,400i,500,500i,700"
+      rel="stylesheet"
+    />
+    <title>Order 45 - SongApe</title>
+  </head>
+
+  <body>
+    <div class="block__wrapper">
+      <div class="block__content page-header">
+        <h3 class="secondary-header">Order 45</h3>
+      </div>
+    </div>
+
+    <div class="block__wrapper order-warnings">
+      <div class="block__content">
+        <p class="order-warnings__warning">
+          The song “SONGTITLE” was purchased on “DATE.MONTH.YEAR”. We deleted
+          this item from your order.
+        </p>
+        <p class="order-warnings__warning">
+          The song “SONGTITLE” already exists on “ALBUMNAME” album. We deleted
+          this item from your order.
+        </p>
+      </div>
+    </div>
+
+    <div class="block__wrapper">
+      <div class="block__content">
+        <div class="albums">
+          <h3 class="secondary-header">Albums</h3>
+          <div class="albums__list">
+            <!-- album-item -->
+            <div class="removable-album">
+              <div class="album-item">
+                <div class="album-item__img"></div>
+                <span class="album-item__title">Empty Sky</span>
+                <span class="album-item__year">(1969)</span>
+                <!-- remove-from-cart-component -->
+                <div class="remove-button">
+                  <span class="remove-button__price">$9.99</span>
+                </div>
+              </div>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+            <!-- album-item -->
+            <div class="removable-album">
+              <div class="album-item">
+                <div class="album-item__img"></div>
+                <span class="album-item__title">Blue Moves</span>
+                <span class="album-item__year">(1976)</span>
+                <!-- remove-from-cart-component -->
+                <div class="remove-button">
+                  <span class="remove-button__price">$9.99</span>
+                </div>
+              </div>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+            <!-- album-item -->
+            <div class="removable-album">
+              <div class="album-item">
+                <div class="album-item__img"></div>
+                <span class="album-item__title">A Single Man</span>
+                <span class="album-item__year">(1978)</span>
+                <!-- remove-from-cart-component -->
+                <div class="remove-button">
+                  <span class="remove-button__price">$9.99</span>
+                </div>
+              </div>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+          </div>
+        </div>
+
+        <div class="songs">
+          <h3 class="secondary-header">Songs</h3>
+          <!-- song-with-number-component -->
+          <div class="song-with-number">
+            <img class="song-with-number__play-icon" src="icons/play.png" />
+            <span class="song-with-number__title">Your Song</span>
+            <span class="song-with-number__duration">9:00</span>
+            <!-- remove-from-cart-component -->
+            <div class="remove-button">
+              <span class="remove-button__price">$0.99</span>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+          </div>
+          <!-- song-with-number-component -->
+          <div class="song-with-number">
+            <img class="song-with-number__play-icon" src="icons/play.png" />
+            <span class="song-with-number__title"
+              >Goodbye Yellow Brick Road</span
+            >
+            <span class="song-with-number__duration">3:33</span>
+            <!-- remove-from-cart-component -->
+            <div class="remove-button">
+              <span class="remove-button__price">$0.99</span>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+          </div>
+          <!-- song-with-number-component -->
+          <div class="song-with-number">
+            <img class="song-with-number__play-icon" src="icons/play.png" />
+            <span class="song-with-number__title">Rocket Man</span>
+            <span class="song-with-number__duration">6:10</span>
+            <!-- remove-from-cart-component -->
+            <div class="remove-button">
+              <span class="remove-button__price">$0.99</span>
+              <img class="delete-icon" src="icons/delete.png" />
+            </div>
+          </div>
+        </div>
+        <div class="order-summary">
+          <div class="order-summary__total secondary-header">Total: $88.04</div>
+          <div class="order-summary__payment">
+            <div class="order-summary__payment-title">Payment Method</div>
+            <div class="order-summary__payment-icons">
+              <div class="payment-method payment-method_selected">
+                <img
+                  class="payment-method__icon"
+                  src="images/payment-visa.png"
+                />
+              </div>
+              <div class="payment-method">
+                <img
+                  class="payment-method__icon"
+                  src="images/payment-mastercard.png"
+                />
+              </div>
+              <div class="payment-method">
+                <img
+                  class="payment-method__icon"
+                  src="images/payment-paypal.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="conf-buttons">
+          <div class="conf-buttons__button">
+            <img
+              class="conf-buttons__button__icon"
+              src="icons/arrow-left.png"
+            />
+            <span class="conf-buttons__button__label">Back</span>
+          </div>
+          <div class="conf-buttons__button">
+            <span class="conf-buttons__button__label">Continue</span>
+            <img
+              class="conf-buttons__button__icon"
+              src="icons/arrow-right.png"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

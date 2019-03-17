@@ -1,6 +1,8 @@
 /* Common */
+
 body {
-  padding: 20px;
+  padding: 0;
+  margin: 0;
   font-family: "Roboto", sans-serif;
   color: #000000;
   font-style: normal;
@@ -9,6 +11,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  word-break: break-word;
 }
 
 h1 {
@@ -26,17 +29,39 @@ li {
   list-style: none;
 }
 
-/* Page */
+/* Page-block */
 
-.page {
+.block__wrapper {
   display: flex;
-  flex-direction: column;
-  max-width: 1000px;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
 }
 
-/* Header */
+.block__content {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  flex-shrink: 1;
+  margin: 15px 20px;
+}
 
-.header {
+/* Secondary header */
+
+.secondary-header {
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.secondary-link {
+  color: #828282;
+  text-decoration: underline;
+}
+
+/* Page header */
+
+.page-header {
   padding-bottom: 28px;
 }
 
@@ -165,43 +190,310 @@ li {
   content: none;
 }
 
-/* album info */
+/* album info, artist info */
 
-.album-info {
+.album-info,
+.artist-info {
   display: flex;
   flex-direction: row;
   margin-bottom: 38px;
 }
 
-.album-cover-container {
+.album-cover-container,
+.artist-info__pic-container {
   flex-shrink: 0;
   width: 195px;
 }
 
-.album-cover {
+.album-cover,
+.artist-info__artist-pic {
   max-width: 195px;
   max-height: 250px;
 }
 
-.album-details {
+.album-details,
+.artist-info__artist-details {
   margin-left: 45px;
 }
 
-.album-title {
+@media all and (max-width: 480px) {
+  .album-info,
+  .artist-info {
+    flex-wrap: wrap;
+  }
+  .album-details,
+  .artist-info__artist-details {
+    margin-left: 0;
+    margin-top: 24px;
+  }
+}
+
+.album-title,
+.artist-info__artist-name {
   text-transform: uppercase;
   margin: 0;
   font-weight: 500;
   font-size: 16px;
 }
 
-.album-description {
+.album-description,
+.artist-info__artist-bio {
   font-weight: 300;
   font-size: 12px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
   margin-top: 20px;
 }
 
-.album-price {
+/* add-to-cart-button */
+
+/* remove-from-cart-button */
+
+.add-to-cart-button,
+.remove-button {
+  display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.add-to-cart-button__price,
+.remove-button__price {
   font-family: "Roboto Mono", monospace;
-  font-size: 10px;
+  font-weight: 600;
+}
+
+.plus-icon,
+.delete-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 5px;
+}
+
+/* song-with-number */
+
+.song-with-number {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-end;
+  width: 300px;
+}
+
+.song-with-number > * + * {
+  margin-left: 5px;
+}
+
+.song-with-number__track-number {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 15px;
+  text-align: right;
+  color: #c4c4c4;
+}
+
+.song-with-number__play-icon {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 12px;
+  height: 12px;
+  align-self: center;
+}
+
+.song-with-number__title {
+}
+
+.song-with-number__duration {
+  margin-left: auto;
+  padding-left: 3px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  color: #c4c4c4;
+}
+
+.song-with-number .add-to-cart-button,
+.song-with-number .remove-button {
+  width: 62px;
+  justify-content: flex-end;
+}
+
+/* Album-item */
+
+.album-item {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  width: 150px;
+}
+
+.album-item__img {
+  width: 150px;
+  height: 150px;
+  background-color: #c4c4c4;
+  margin-bottom: 14px;
+}
+
+.album-item__title {
+}
+
+.album-item__year {
+}
+
+/* Albums */
+
+.albums__list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Order */
+
+.order-expanded {
+  background-color: #fbfbfb;
+}
+
+.order-collapsed:hover {
+  background-color: #fff4cf;
+}
+
+.order-header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 6px 0;
+}
+
+.order-header .secondary-link {
+  margin-left: 30px;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+.order-header__title {
+  width: 100px;
+  font-size: 14px;
+}
+
+.order-header__title__id {
+  font-weight: 500;
+}
+
+.order-header__date {
+  font-size: 11px;
+  width: 70px;
+  text-align: right;
+}
+
+.order-header__total {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 600;
+  width: 80px;
+  text-align: right;
+}
+
+/* Order-confirmation */
+
+.order-warnings {
+  background-color: #fff4cf;
+}
+
+.order-warnings__warning::before {
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  content: "!";
+}
+
+.removable-album {
+  display: flex;
+  flex-direction: row;
+  margin-right: 30px;
+}
+
+.removable-album .album-item {
+  margin-right: 0;
+}
+
+/* order summary */
+
+.order-summary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 47px;
+}
+
+.order-summary__total {
+  width: 250px;
+  flex-shrink: 0;
+  flex-grow: 1;
+  margin-bottom: 14px;
+}
+
+.order-summary__payment {
+}
+
+.order-summary__payment-title {
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+
+.order-summary__payment-icons {
+  display: flex;
+  flex-direction: row;
+}
+
+.payment-method {
+  background-color: transparent;
+  transition: background-color 0.351s ease;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.payment-method_selected {
+  background-color: #fff4cf;
+  transition: background-color 0.351s ease;
+}
+
+.payment-method:hover {
+  background-color: #d6ffcf;
+  transition: background-color 0.351s ease;
+}
+
+.payment-method__icon {
+  height: 60px;
+  display: block;
+}
+
+/* confirmation-buttons */
+
+.conf-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 22px;
+}
+
+.conf-buttons__button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #2d9cdb;
+}
+
+.conf-buttons__button:hover {
+  color: coral;
+}
+
+.conf-buttons__button__icon {
+  display: block;
+  height: 32px;
+}
+
+.conf-buttons__button__label {
+  font-size: 15px;
 }
