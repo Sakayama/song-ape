@@ -1,9 +1,15 @@
 module Main exposing (Model, Msg(..), init, main, update, view)
 
 import Browser
+import Data.Album exposing (Album)
+import Data.Artist exposing (Artist)
+import Data.Item exposing (AlbumDatagram, Item(..), SongDatagram, itemPrice, splitItems)
+import Data.Order exposing (Order, orderDecoder)
+import Data.Song exposing (Song, showDuration)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onInput)
+import Json.Decode as D exposing (Decoder, Error(..))
 
 
 main =
@@ -15,12 +21,119 @@ main =
 
 
 type alias Model =
-    Int
+    { input : String
+    , parsingResult : Result Error Order
+    }
 
 
 init : Model
 init =
-    0
+    { input = "", parsingResult = D.decodeString (D.fail "") "" }
+        |> update (Change srcText)
+
+
+srcText =
+    """
+{
+  "orderId": 42,
+  "items": [
+    {
+      "songs": [
+        {
+          "songId": "4",
+          "artistId": "artist1",
+          "albumId": "album1",
+          "title": "Dark / Light",
+          "duration": 510000
+        },
+        {
+          "songId": "1",
+          "artistId": "artist1",
+          "albumId": "album1",
+          "title": "Before the Beginning",
+          "duration": 5100078
+        }
+      ],
+      "artist": {
+        "artistId": "artist1",
+        "artistName": "John Frusciante"
+      },
+      "album": {
+        "albumId": "album1",
+        "albumTitle": "Empyrean",
+        "albumYear": 2009
+      },
+      "price": 0.99
+    },
+    {
+      "song": {
+        "songId": "4",
+        "artistId": "artist1",
+        "albumId": "album1",
+        "title": "Dark / Light",
+        "duration": 510000
+      },
+      "artist": {
+        "artistId": "artist1",
+        "artistName": "John Frusciante"
+      },
+      "album": {
+        "albumId": "album1",
+        "albumTitle": "Empyrean",
+        "albumYear": 2009
+      },
+      "price": 0.99
+    },   {
+      "songs": [
+        {
+          "songId": "4",
+          "artistId": "artist1",
+          "albumId": "album1",
+          "title": "Dark / Light",
+          "duration": 510000
+        },
+        {
+          "songId": "1",
+          "artistId": "artist1",
+          "albumId": "album1",
+          "title": "Before the Beginning",
+          "duration": 5100078
+        }
+      ],
+      "artist": {
+        "artistId": "artist1",
+        "artistName": "John Frusciante"
+      },
+      "album": {
+        "albumId": "album1",
+        "albumTitle": "Empyrean japanese edition deluxe",
+        "albumYear": 2009
+      },
+      "price": 0.99
+    },
+    {
+      "song": {
+        "songId": "4",
+        "artistId": "artist1",
+        "albumId": "album1",
+        "title": "After the Ending",
+        "duration": 510000
+      },
+      "artist": {
+        "artistId": "artist1",
+        "artistName": "John Frusciante"
+      },
+      "album": {
+        "albumId": "album1",
+        "albumTitle": "Empyrean",
+        "albumYear": 2009
+      },
+      "price": 0.99
+    }
+  ]
+}
+
+    """
 
 
 
@@ -28,18 +141,14 @@ init =
 
 
 type Msg
-    = Increment
-    | Decrement
+    = Change String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            model + 1
-
-        Decrement ->
-            model - 1
+        Change newInput ->
+            { model | input = newInput, parsingResult = D.decodeString orderDecoder newInput }
 
 
 
@@ -48,14 +157,34 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] [viewPageHeader, viewWarnings, viewOrderContent]
+    div [] [ viewResult model.parsingResult ]
 
 
-viewPageHeader =
+viewResult : Result Error Order -> Html Msg
+viewResult parsingResult =
+    case parsingResult of
+        Ok x ->
+            viewOrder x
+
+        Err e ->
+            div [] [ text <| D.errorToString e ]
+
+
+viewOrder : Order -> Html Msg
+viewOrder order =
+    div []
+        [ viewPageHeader order.orderId
+        , viewWarnings
+        , viewOrderContent order
+        ]
+
+
+viewPageHeader : Int -> Html Msg
+viewPageHeader num =
     div [ class "block__wrapper" ]
         [ div [ class "block__content page-header" ]
             [ h3 [ class "secondary-header" ]
-                [ text "Order 45" ]
+                [ text ("Order " ++ String.fromInt num) ]
             ]
         ]
 
@@ -64,134 +193,101 @@ viewWarnings =
     div [ class "block__wrapper order-warnings" ]
         [ div [ class "block__content" ]
             [ p [ class "order-warnings__warning" ]
-                [ text "The song “SONGTITLE” was purchased on “DATE.MONTH.YEAR”. We deleted\n          this item from your order." ]
+                [ text "The song “SONGTITLE” was purchased on “DATE.MONTH.YEAR”. We deleted this item from your order." ]
             , p [ class "order-warnings__warning" ]
-                [ text "The song “SONGTITLE” already exists on “ALBUMNAME” album. We deleted\n          this item from your order." ]
+                [ text "The song “SONGTITLE” already exists on “ALBUMNAME” album. We deleted this item from your order." ]
             ]
         ]
 
 
-viewOrderContent =
+viewOrderContent : Order -> Html Msg
+viewOrderContent order =
+    let
+        ( songs, albums ) =
+            splitItems order.items
+    in
     div [ class "block__wrapper" ]
         [ div [ class "block__content" ]
-            [ viewAlbums
-            , viewSongs
-            , viewOrderSummary
+            [ viewAlbums albums
+            , viewSongs songs
+            , viewOrderSummary order
             , viewConfButtons
             ]
         ]
 
 
-viewAlbums =
+viewAlbum : AlbumDatagram -> Html Msg
+viewAlbum ad =
+    div [ class "album-item" ]
+        [ div [ class "album-item__img" ]
+            []
+        , span [ class "album-item__title" ]
+            [ text ad.album.albumTitle ]
+        , span [ class "album-item__year" ]
+            [ text (String.fromInt ad.album.albumYear) ]
+        , div [ class "remove-button" ]
+            [ span [ class "remove-button__price" ]
+                [ text ("$" ++ String.fromFloat ad.price) ]
+            ]
+        ]
+
+
+viewRemoveableAlbum : AlbumDatagram -> Html Msg
+viewRemoveableAlbum ad =
+    div [ class "removable-album" ]
+        [ viewAlbum ad
+        , img [ class "delete-icon", src "icons/delete.png" ]
+            []
+        ]
+
+
+viewAlbums : List AlbumDatagram -> Html Msg
+viewAlbums albums =
     div [ class "albums" ]
         [ h3 [ class "secondary-header" ]
             [ text "Albums" ]
         , div [ class "albums__list" ]
-            [ div [ class "removable-album" ]
-                [ div [ class "album-item" ]
-                    [ div [ class "album-item__img" ]
-                        []
-                    , span [ class "album-item__title" ]
-                        [ text "Empty Sky" ]
-                    , span [ class "album-item__year" ]
-                        [ text "(1969)" ]
-                    , div [ class "remove-button" ]
-                        [ span [ class "remove-button__price" ]
-                            [ text "$9.99" ]
-                        ]
-                    ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
-            , div [ class "removable-album" ]
-                [ div [ class "album-item" ]
-                    [ div [ class "album-item__img" ]
-                        []
-                    , span [ class "album-item__title" ]
-                        [ text "Blue Moves" ]
-                    , span [ class "album-item__year" ]
-                        [ text "(1976)" ]
-                    , div [ class "remove-button" ]
-                        [ span [ class "remove-button__price" ]
-                            [ text "$9.99" ]
-                        ]
-                    ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
-            , div [ class "removable-album" ]
-                [ div [ class "album-item" ]
-                    [ div [ class "album-item__img" ]
-                        []
-                    , span [ class "album-item__title" ]
-                        [ text "A Single Man" ]
-                    , span [ class "album-item__year" ]
-                        [ text "(1978)" ]
-                    , div [ class "remove-button" ]
-                        [ span [ class "remove-button__price" ]
-                            [ text "$9.99" ]
-                        ]
-                    ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
+            (List.map viewRemoveableAlbum albums)
+        ]
+
+
+viewRemovableSong : SongDatagram -> Html Msg
+viewRemovableSong sd =
+    div [ class "removable-song" ]
+        [ img [ class "removable-song__play-icon", src "icons/play.png" ]
+            []
+        , span [ class "removable-song__title" ]
+            [ text sd.song.title ]
+        , span [ class "removable-song__duration" ]
+            [ text (showDuration sd.song.duration) ]
+        , div [ class "remove-button" ]
+            [ span [ class "remove-button__price" ]
+                [ text ("$" ++ String.fromFloat sd.price) ]
+            , img [ class "delete-icon", src "icons/delete.png" ]
+                []
             ]
         ]
 
 
-viewSongs =
+viewSongs : List SongDatagram -> Html Msg
+viewSongs songs =
     div [ class "songs" ]
-        [ h3 [ class "secondary-header" ]
-            [ text "Songs" ]
-        , div [ class "song-with-number" ]
-            [ img [ class "song-with-number__play-icon", src "icons/play.png" ]
-                []
-            , span [ class "song-with-number__title" ]
-                [ text "Your Song" ]
-            , span [ class "song-with-number__duration" ]
-                [ text "9:00" ]
-            , div [ class "remove-button" ]
-                [ span [ class "remove-button__price" ]
-                    [ text "$0.99" ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
-            ]
-        , div [ class "song-with-number" ]
-            [ img [ class "song-with-number__play-icon", src "icons/play.png" ]
-                []
-            , span [ class "song-with-number__title" ]
-                [ text "Goodbye Yellow Brick Road" ]
-            , span [ class "song-with-number__duration" ]
-                [ text "3:33" ]
-            , div [ class "remove-button" ]
-                [ span [ class "remove-button__price" ]
-                    [ text "$0.99" ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
-            ]
-        , div [ class "song-with-number" ]
-            [ img [ class "song-with-number__play-icon", src "icons/play.png" ]
-                []
-            , span [ class "song-with-number__title" ]
-                [ text "Rocket Man" ]
-            , span [ class "song-with-number__duration" ]
-                [ text "6:10" ]
-            , div [ class "remove-button" ]
-                [ span [ class "remove-button__price" ]
-                    [ text "$0.99" ]
-                , img [ class "delete-icon", src "icons/delete.png" ]
-                    []
-                ]
-            ]
+        [ h3 [ class "secondary-header" ] [ text "Songs" ]
+        , div [] (List.map viewRemovableSong songs)
         ]
 
 
-viewOrderSummary =
+viewOrderSummary : Order -> Html Msg
+viewOrderSummary order =
     div [ class "order-summary" ]
         [ div [ class "order-summary__total secondary-header" ]
-            [ text "Total: $88.04" ]
+            [ order.items
+                |> List.map itemPrice
+                |> List.sum
+                |> String.fromFloat
+                |> (\x -> "Total: $" ++ x)
+                |> text
+            ]
         , div [ class "order-summary__payment" ]
             [ div [ class "order-summary__payment-title" ]
                 [ text "Payment Method" ]
