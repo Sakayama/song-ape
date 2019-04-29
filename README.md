@@ -23,3 +23,8 @@ cp -r "./src/images" "./build" &&
 elm-live src/Main.elm --dir="./build" --open -- --output="./build/bundle.js"
 
 ```
+
+## Assumptions
+
+- Each album has a cover url and a description.
+- Each artist has a photo url and a description.

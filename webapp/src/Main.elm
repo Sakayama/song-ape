@@ -61,7 +61,9 @@ srcText =
       "album": {
         "albumId": "album1",
         "albumTitle": "Empyrean",
-        "albumYear": 2009
+        "albumYear": 2009,
+        "albumCover" : "https://upload.wikimedia.org/wikipedia/en/6/65/John_Frusciante_-_The_Empyrean.jpg",
+        "albumDescription" : "here"
       },
       "price": 0.99
     },
@@ -107,7 +109,9 @@ srcText =
       "album": {
         "albumId": "album1",
         "albumTitle": "Empyrean japanese edition deluxe",
-        "albumYear": 2009
+        "albumYear": 2009,
+        "albumCover" : "https://upload.wikimedia.org/wikipedia/en/6/65/John_Frusciante_-_The_Empyrean.jpg",
+        "albumDescription" : "here"
       },
       "price": 0.99
     },
@@ -219,7 +223,7 @@ viewOrderContent order =
 viewAlbum : AlbumDatagram -> Html Msg
 viewAlbum ad =
     div [ class "album-item" ]
-        [ div [ class "album-item__img" ]
+        [ img [ class "album-item__img", src ad.album.albumCover]
             []
         , span [ class "album-item__title" ]
             [ text ad.album.albumTitle ]
