@@ -21,10 +21,10 @@ artists = fromList $ (\x -> (Artist.artistId x, x)) <$> [
 
 albums :: Map String Album.Album
 albums = fromList $ (\x -> (Album.albumId x, x)) <$> [
-    Album.Album "album1" "Empyrean" 2009,
-    Album.Album "album2" "Niandra LaDes" 1994, 
-    Album.Album "album3" "Curtains" 2005,
-    Album.Album "album4" "White Album" 1968
+    Album.Album "album1" "Empyrean" 2009 "https://upload.wikimedia.org/wikipedia/en/6/65/John_Frusciante_-_The_Empyrean.jpg" "description",
+    Album.Album "album2" "Niandra LaDes" 1994 "https://upload.wikimedia.org/wikipedia/en/b/b5/Niandra_LaDes_and_Usually_Just_a_TShirt_album_cover.jpg" "description", 
+    Album.Album "album3" "Curtains" 2005 "https://upload.wikimedia.org/wikipedia/en/f/f7/CurtainsFrusciante.jpg" "description",
+    Album.Album "album4" "White Album" 1968 "https://upload.wikimedia.org/wikipedia/commons/2/20/TheBeatles68LP.jpg" "description"
     ]
 
 songs :: Map String S.Song
