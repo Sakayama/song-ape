@@ -14,9 +14,9 @@ orders = [
 
 artists :: Map String Artist.Artist
 artists = fromList $ (\x -> (Artist.artistId x, x)) <$> [
-    Artist.Artist "artist1" "John Frusciante",
-    Artist.Artist "artist2" "the Beatles",
-    Artist.Artist "artist3" "Vladimir Logachev"
+    Artist.Artist "artist1" "John Frusciante" "https://media.gettyimages.com/photos/john-frusciante-of-red-hot-chili-peppers-performs-on-stage-at-palau-picture-id128104024?s=612x612" "here", 
+    Artist.Artist "artist2" "the Beatles" "https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiQ18Sc8_rhAhWvtIsKHfAuDXsQjRx6BAgBEAU&url=https%3A%2F%2Fwww.cifraclub.com.br%2Fthe-beatles%2F&psig=AOvVaw0HU45vSbHEJzrBCpI_Nqwd&ust=1556819614785580" "here",
+    Artist.Artist "artist3" "Vladimir Logachev" "https://i1.sndcdn.com/avatars-000317670703-hyu911-t500x500.jpg" "here"
     ]
 
 albums :: Map String Album.Album

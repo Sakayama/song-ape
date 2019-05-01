@@ -56,7 +56,9 @@ srcText =
       ],
       "artist": {
         "artistId": "artist1",
-        "artistName": "John Frusciante"
+        "artistName": "John Frusciante",
+        "artistPhoto": "https://media.gettyimages.com/photos/john-frusciante-of-red-hot-chili-peppers-performs-on-stage-at-palau-picture-id128104024?s=612x612",
+        "artistDescription": "GOD111"
       },
       "album": {
         "albumId": "album1",
@@ -77,7 +79,9 @@ srcText =
       },
       "artist": {
         "artistId": "artist1",
-        "artistName": "John Frusciante"
+        "artistName": "John Frusciante",
+        "artistPhoto": "https://media.gettyimages.com/photos/john-frusciante-of-red-hot-chili-peppers-performs-on-stage-at-palau-picture-id128104024?s=612x612",
+        "artistDescription": "GOD111"
       },
       "album": {
         "albumId": "album1",
@@ -104,7 +108,9 @@ srcText =
       ],
       "artist": {
         "artistId": "artist1",
-        "artistName": "John Frusciante"
+        "artistName": "John Frusciante",
+        "artistPhoto": "https://media.gettyimages.com/photos/john-frusciante-of-red-hot-chili-peppers-performs-on-stage-at-palau-picture-id128104024?s=612x612",
+        "artistDescription": "GOD111"
       },
       "album": {
         "albumId": "album1",
@@ -125,7 +131,9 @@ srcText =
       },
       "artist": {
         "artistId": "artist1",
-        "artistName": "John Frusciante"
+        "artistName": "John Frusciante",
+        "artistPhoto": "https://media.gettyimages.com/photos/john-frusciante-of-red-hot-chili-peppers-performs-on-stage-at-palau-picture-id128104024?s=612x612",
+        "artistDescription": "GOD111"
       },
       "album": {
         "albumId": "album1",
@@ -223,7 +231,7 @@ viewOrderContent order =
 viewAlbum : AlbumDatagram -> Html Msg
 viewAlbum ad =
     div [ class "album-item" ]
-        [ img [ class "album-item__img", src ad.album.albumCover]
+        [ img [ class "album-item__img", src ad.album.albumCover ]
             []
         , span [ class "album-item__title" ]
             [ text ad.album.albumTitle ]
