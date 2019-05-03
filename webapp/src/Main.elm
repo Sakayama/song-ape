@@ -4,7 +4,7 @@ import Browser
 import Data.Album exposing (Album)
 import Data.Artist exposing (Artist)
 import Data.Item exposing (AlbumDatagram, Item(..), SongDatagram, itemPrice, splitItems)
-import Data.Order exposing (Order, orderDecoder)
+import Data.Order exposing (Order, OrderStatus(..), orderDecoder)
 import Data.Song exposing (Song, showDuration)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -36,6 +36,10 @@ srcText =
     """
 {
   "orderId": 42,
+  "orderStatus": { 
+    "status": "confirmed",
+    "timestamp": 123456
+  },
   "items": [
     {
       "songs": [
@@ -185,20 +189,31 @@ viewResult parsingResult =
 viewOrder : Order -> Html Msg
 viewOrder order =
     div []
-        [ viewPageHeader order.orderId
+        [ viewPageHeader order
         , viewWarnings
         , viewOrderContent order
         ]
 
 
-viewPageHeader : Int -> Html Msg
-viewPageHeader num =
+viewPageHeader : Order -> Html Msg
+viewPageHeader order =
     div [ class "block__wrapper" ]
         [ div [ class "block__content page-header" ]
             [ h3 [ class "secondary-header" ]
-                [ text ("Order " ++ String.fromInt num) ]
+                [ text ("Order " ++ String.fromInt order.orderId) ]
+            , viewOrderStatus order.orderStatus
             ]
         ]
+
+
+viewOrderStatus : OrderStatus -> Html Msg
+viewOrderStatus orderStatus =
+    case orderStatus of
+        Unconfirmed ->
+            text "(unconfirmed)"
+
+        Confirmed timestamp ->
+            String.fromInt timestamp |> text
 
 
 viewWarnings =
