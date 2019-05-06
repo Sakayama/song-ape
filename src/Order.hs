@@ -4,6 +4,7 @@ module Order (
   , OrderItem(..) -- for Db
   , ItemDatagram(..)
   , OrderDatagram(..)
+  , OrderStatus(..)
   , createOrder
   , serializeOrder
   , serializeAlbum) where -- ?
@@ -22,12 +23,14 @@ data ItemId = SongId String
 data OrderItem = SongItem { songId :: String, price :: Float } 
   | AlbumItem { albumId :: String, albumPrice :: Float }
 
-data Order = Order { orderId :: Int, orderContent :: [OrderItem] }
+data Order = Order { orderId :: Int, orderContent :: [OrderItem], orderStatus :: OrderStatus }
+
+data OrderStatus = Unconfirmed | Confirmed Int
 
 data ItemDatagram = SongDatagram S.Song (Maybe Artist.Artist) (Maybe Album.Album) Float
   | AlbumDatagram Album.Album (Maybe Artist.Artist) [S.Song] Float
 
-data OrderDatagram = OrderDatagram Int [ItemDatagram]
+data OrderDatagram = OrderDatagram Int [ItemDatagram] OrderStatus
 
 -- takes two lists of prices, a list of previous orders and a list of ids
 -- returns an order in case if it's not empty
@@ -35,7 +38,7 @@ data OrderDatagram = OrderDatagram Int [ItemDatagram]
 -- we suppose that if we have price, then we'll definitely have a song
 createOrder :: [(String, Float)] -> [(String, Float)] -> [Order] -> [ItemId] -> Maybe Order
 createOrder songPrices albumPrices previousOrders ids = 
-  if null items then Nothing else Just (Order nextId items)
+  if null items then Nothing else Just (Order nextId items (Confirmed 98098098))
   where items = catMaybes $ findPrice <$> nub ids
         findPrice (SongId id) = (\(a, b) -> SongItem a b) <$> find (\(x, _) -> x == id) songPrices
         findPrice (AlbumId id) = (\(x, y) -> AlbumItem x y) <$> find (\(x, _) -> x == id) albumPrices
@@ -43,7 +46,7 @@ createOrder songPrices albumPrices previousOrders ids =
 
 -- prepares order to be transmitted to frontend
 serializeOrder :: M.Map String Artist.Artist -> M.Map String Album.Album -> M.Map String S.Song -> Order -> OrderDatagram
-serializeOrder artists albums songs (Order orderId items) = OrderDatagram orderId serializedContent 
+serializeOrder artists albums songs (Order orderId items (Confirmed 98098098)) = OrderDatagram orderId serializedContent (Confirmed 98098098)
   where serializedContent = serializeItem <$> items
         serializeItem x@(AlbumItem _ _) = serializeAlbum artists albums songs x
         serializeItem x@(SongItem _ _) = serializeSong artists albums songs x

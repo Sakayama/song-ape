@@ -25,7 +25,7 @@ placeOrder ids = fromMaybe errorMessage $ showOrder <$> Backend.postOrder ids
 
 -- displays order as a string
 showOrder :: OrderDatagram -> String
-showOrder (OrderDatagram orderId items) =
+showOrder (OrderDatagram orderId items orderStatus) =
   title ++ displayedItems ++ total where
   title = "Order: #" ++ show orderId ++ "\n\n"
   displayedItems = intercalate "\n\n" $ showItem <$> items

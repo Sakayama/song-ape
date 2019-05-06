@@ -50,6 +50,12 @@ unconfirmedDecoder =
 
 confirmedDecoder : Decoder OrderStatus
 confirmedDecoder =
+    D.map2 (\_ timestamp -> Confirmed timestamp)
+        confirmedStatusDecoder
+        (D.field "timestamp" D.int)
+
+
+confirmedStatusDecoder : Decoder String
+confirmedStatusDecoder =
     D.field "status" D.string
         |> filter (\s -> s == "confirmed") "not confirmed"
-        |> D.map (\_ -> Confirmed 424242)

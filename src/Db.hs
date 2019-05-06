@@ -8,8 +8,8 @@ import qualified Album
 
 orders :: [O.Order]
 orders = [
-    O.Order 33 [O.SongItem "1" 1.0], 
-    O.Order 44 [O.SongItem "3" 1.0]
+    O.Order 33 [O.SongItem "1" 1.0] (O.Confirmed 449090), 
+    O.Order 44 [O.SongItem "3" 1.0] (O.Confirmed 2809829809)
     ]
 
 artists :: Map String Artist.Artist
