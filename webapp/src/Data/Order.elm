@@ -3,7 +3,7 @@ module Data.Order exposing (Order, OrderStatus(..), orderDecoder)
 import Data.Item exposing (Item(..), itemDecoder)
 import Json.Decode as D exposing (Decoder)
 
-
+-- unconfirmed contains a list of warnings
 type OrderStatus
     = Unconfirmed (List String)
     | Confirmed Int
