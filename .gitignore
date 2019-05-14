@@ -5,6 +5,8 @@ song-ape.cabal
 
 # mac
 .DS_Store
+.idea
+*.iml
 
 # win
 
