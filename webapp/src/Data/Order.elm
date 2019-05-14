@@ -5,7 +5,7 @@ import Json.Decode as D exposing (Decoder)
 
 
 type OrderStatus
-    = Unconfirmed
+    = Unconfirmed (List String)
     | Confirmed Int
 
 
@@ -43,9 +43,15 @@ orderStatusDecoder =
 
 unconfirmedDecoder : Decoder OrderStatus
 unconfirmedDecoder =
+    D.map2 (\_ warnings -> Unconfirmed warnings)
+        unconfirmedStatusDecoder
+        (D.field "warnings" (D.list D.string))
+
+
+unconfirmedStatusDecoder : Decoder String
+unconfirmedStatusDecoder =
     D.field "status" D.string
         |> filter (\s -> s == "unconfirmed") "not unconfirmed"
-        |> D.map (\_ -> Unconfirmed)
 
 
 confirmedDecoder : Decoder OrderStatus

@@ -32,13 +32,17 @@ init =
         |> update (Change srcText)
 
 
+
+--
+
+
 srcText =
     """
 {
   "orderId": 42,
   "orderStatus": { 
-    "status": "confirmed",
-    "timestamp": 123456
+    "status": "unconfirmed",
+    "warnings": ["warning 1", "warning 2"]
   },
   "items": [
     {
@@ -190,7 +194,7 @@ viewOrder : Order -> Html Msg
 viewOrder order =
     div []
         [ viewPageHeader order
-        , viewWarnings
+        , viewWarnings order.orderStatus
         , viewOrderContent order
         ]
 
@@ -209,22 +213,32 @@ viewPageHeader order =
 viewOrderStatus : OrderStatus -> Html Msg
 viewOrderStatus orderStatus =
     case orderStatus of
-        Unconfirmed ->
-            text "(unconfirmed)"
+        Unconfirmed warnings ->
+            div []
+                [ text "(unconfirmed)"
+                , div [] (List.map text warnings)
+                ]
 
         Confirmed timestamp ->
             String.fromInt timestamp |> text
 
 
-viewWarnings =
-    div [ class "block__wrapper order-warnings" ]
-        [ div [ class "block__content" ]
-            [ p [ class "order-warnings__warning" ]
-                [ text "The song “SONGTITLE” was purchased on “DATE.MONTH.YEAR”. We deleted this item from your order." ]
-            , p [ class "order-warnings__warning" ]
-                [ text "The song “SONGTITLE” already exists on “ALBUMNAME” album. We deleted this item from your order." ]
-            ]
-        ]
+viewWarning : String -> Html Msg
+viewWarning warning =
+  p [ class "order-warnings__warning" ]
+    [ text warning ]
+
+
+viewWarnings : OrderStatus -> Html Msg
+viewWarnings orderStatus =
+    case orderStatus of
+        Unconfirmed warnings ->
+            div [ class "block__wrapper order-warnings" ]
+                [ div [ class "block__content" ] (List.map viewWarning warnings)
+                ]
+
+        Confirmed _ ->
+            div [] []
 
 
 viewOrderContent : Order -> Html Msg

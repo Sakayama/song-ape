@@ -1,5 +1,7 @@
 module Album (Album(..)) where
 
+import Order
+
 data Album = 
     Album { albumId :: String, 
     albumTitle :: String, 
